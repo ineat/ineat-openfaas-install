@@ -1,0 +1,27 @@
+- name: Install openfaas
+  hosts: master
+  tasks:
+  - name: Download OpenFaas
+    shell: git clone https://github.com/openfaas/faas.git
+  - name: Deploy stack
+    become: yes
+    become_method: sudo
+    shell: 
+      cmd: ./deploy_stack.sh
+      chdir: faas
+    register: results
+  - set_fact:
+      password: "{{ results.stdout | regex_search(regexp,'\\1') | first }}"
+    vars:
+      regexp: 'password: ([^"\s]+)'
+  - debug:
+      var: password
+  - name: Download FaasCli
+    shell: curl -sSL -o faas-cli.sh https://cli.openfaas.com
+  - name: Install FaasCli
+    shell: chmod +x faas-cli.sh && ./faas-cli.sh
+  - name: Copy FaasCli in /usr/bin
+    become: yes
+    become_method: sudo
+    shell: cp faas-cli /usr/local/bin/faas-cli && ln -sf /usr/local/bin/faas-cli /usr/local/bin/faas
+

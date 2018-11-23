@@ -1,0 +1,23 @@
+- name: Install worker swarm node
+  hosts: "all"
+  become: true
+  tasks:
+  - name: Add docker gpg key
+    apt_key: url=https://download.docker.com/linux/ubuntu/gpg
+
+  - name: Add docker repository
+    apt_repository:
+      repo: deb [arch=amd64] http://download.docker.com/linux/ubuntu xenial stable
+
+  - name: Update and upgrade
+    apt:
+      upgrade: yes
+      update_cache: yes
+
+  - name: Install docker
+    apt:
+      name: docker-ce
+      state: present
+
+  - name: swarm join
+    shell: docker swarm join --token $(cat /vagrant/worker_token) 10.0.3.2:2377

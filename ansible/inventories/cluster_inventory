@@ -1,0 +1,6 @@
+[workers]
+worker-1
+worker-2
+
+[master]
+master

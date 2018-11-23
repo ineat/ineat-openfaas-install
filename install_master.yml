@@ -1,0 +1,38 @@
+- name: Install master swarm node
+  hosts: "all"
+  become: true
+  vars:
+    ip: "{{ ip }}"
+  tasks:
+  - name: Add docker gpg key
+    apt_key: url=https://download.docker.com/linux/ubuntu/gpg
+
+  - name: Add docker repository
+    apt_repository:
+      repo: deb [arch=amd64] http://download.docker.com/linux/ubuntu xenial stable
+
+  - name: Update and upgrade
+    apt:
+      upgrade: yes
+      update_cache: yes
+
+  - name: Install docker
+    apt:
+      name: docker-ce
+      state: present
+
+  - name: check swarm is active
+    shell: 'docker info | grep "Swarm: active"'
+    become_method: sudo
+    register: swarm_active
+    ignore_errors: true
+
+  - name: Init swarm
+    when: swarm_active.rc == 1
+    become_method: sudo
+    shell: docker swarm init --listen-addr {{ ip }}:2377 --advertise-addr {{ ip }}
+
+  - name: Get swarm token
+    shell: docker swarm join-token -q worker > /vagrant/worker_token
+
+
