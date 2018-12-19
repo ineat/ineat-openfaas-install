@@ -1,0 +1,23 @@
+master:
+  ip: "10.0.3.2"
+  config: 
+    cpus: 1
+    memory: 512
+    image: "ubuntu/xenial64"
+    network: "private_network"
+
+workers:
+  worker-1:
+    ip: "10.0.3.3"
+    config: 
+      cpus: 1
+      memory: 512
+      image: "ubuntu/xenial64"
+      network: "private_network"
+  worker-2:
+    ip: "10.0.3.4"
+    config: 
+      cpus: 1
+      memory: 512
+      image: "ubuntu/xenial64"
+      network: "private_network"

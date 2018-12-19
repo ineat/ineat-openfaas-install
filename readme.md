@@ -3,6 +3,29 @@ This project contains VagrantFile and Ansible Playbooks wich can be used to crea
 
 [OpenFaas on Swarm Cluster](url)
 
+## How to add worker
+
+> In vagrant-config.yml, add new worker settings. For example :
+
+```yaml
+...
+    worker-3:
+        ip: "10.0.3.5"
+        config: 
+            cpus: 1
+            memory: 512
+            image: "ubuntu/xenial64"
+            network: "private_network"
+...
+```
+
+> In hosts.yml, add worker IP in workers. For example :
+```yaml
+[workers]
+...
+10.0.3.5
+```
+
 ## How to start
 
 > Clone this project
